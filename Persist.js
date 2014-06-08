@@ -1,4 +1,4 @@
-angular.module("ngPersist", []).factory("Persist", function($http, Saving, log) {
+angular.module("ngPersist", []).factory("Persist", function($http, log) {
   var Persist, debug;
   debug = false;
   return Persist = (function() {
@@ -14,7 +14,6 @@ angular.module("ngPersist", []).factory("Persist", function($http, Saving, log) 
     }
 
     Persist.prototype.update = function(watchObject) {
-      var saving;
       if (debug) {
         log.at("Persist Update");
       }
@@ -43,19 +42,16 @@ angular.module("ngPersist", []).factory("Persist", function($http, Saving, log) 
         log.note("API Path:", this.apiRoute);
         log.say("Watch Object:", this.watchObject);
       }
-      saving = new Saving();
       if (debug) {
         log.doing("Performing Update...");
       }
       return $http.post(this.apiRoute, watchObject).success(function(result) {
-        saving.done();
         if (debug) {
           log.success("Update Succeeded");
           return log.say("Returned From Server: ", result.data);
         }
       }).error(function(error) {
-        log.error(error);
-        return saving.error();
+        return log.error(error);
       });
     };
 
